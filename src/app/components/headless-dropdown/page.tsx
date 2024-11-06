@@ -47,7 +47,7 @@ const CustomList = (props: ComponentProps<'div'>) => (
 
 const CustomListItem = (props: ComponentProps<'div'>) => (
   <div
-    className="p-2 border-b border-gray-600 flex items-center aria-selected:bg-gray-800 hover:bg-blue-100"
+    className="p-2 border-b border-gray-600 flex items-center aria-selected:bg-gray-800 hover:bg-gray-600"
     {...props}
   />
 );

@@ -1,28 +1,22 @@
 'use client';
 
-import { createContext, RefObject, useContext } from 'react';
+import { createContext, useContext } from 'react';
+import { useDropdown } from '../hooks/useDropdown';
 
 // Define the context type with a generic parameter T
-type DropdownContextType<T extends { label: string }> = {
-  isOpen: boolean;
-  toggleDropdown: () => void;
-  selectedIndex: number;
-  selectedItem: T | null;
-  updateSelectedItem: (item: T) => void;
-  getAriaAttributes: () => Record<string, string>;
-  dropdownRef: RefObject<HTMLElement>;
-};
+
+type DropdownContextType = ReturnType<typeof useDropdown>;
 
 // Create a generic context without a default type for T
-function createDropdownContext<T extends { label: string }>() {
-  return createContext<DropdownContextType<T> | null>(null);
+function createDropdownContext() {
+  return createContext<DropdownContextType | null>(null);
 }
 
 // Initialize the context without specifying a type
 const DropdownContext = createDropdownContext();
 
-export const useDropdownContext = <T extends { label: string }>() => {
-  const context = useContext(DropdownContext) as DropdownContextType<T> | null;
+export const useDropdownContext = () => {
+  const context = useContext(DropdownContext) as DropdownContextType | null;
   if (!context) {
     throw new Error(
       'useDropdownContext must be used within a DropdownProvider'

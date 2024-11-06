@@ -7,12 +7,13 @@ import {
   RefObject,
 } from 'react';
 import { useDropdown } from '../hooks/useDropdown';
+import { HeadlessDropdownEntry } from '../types';
 import DropdownContext, { useDropdownContext } from './DropdownContext';
 
-const HeadlessDropdown = <T extends { label: string }>({
+const HeadlessDropdown = ({
   children,
   items,
-}: PropsWithChildren<{ items: T[] }>) => {
+}: PropsWithChildren<{ items: HeadlessDropdownEntry[] }>) => {
   const {
     isOpen,
     toggleDropdown,
@@ -29,8 +30,8 @@ const HeadlessDropdown = <T extends { label: string }>({
         toggleDropdown,
         selectedIndex,
         selectedItem,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
+        getAriaAttributes,
+        dropdownRef,
         updateSelectedItem,
       }}
     >
@@ -52,7 +53,7 @@ HeadlessDropdown.Trigger = function Trigger({
   as: Component = 'button',
   ...props
 }: GenericComponentType<'button'>) {
-  const { selectedItem, toggleDropdown } = useDropdownContext();  
+  const { selectedItem, toggleDropdown } = useDropdownContext();
 
   return (
     <Component tabIndex={0} onClick={toggleDropdown} {...props}>
