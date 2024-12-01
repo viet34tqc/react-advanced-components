@@ -20,7 +20,6 @@ const AutoscrollList = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [text, setText] = useState('');
 
-  const contentRef = useRef<HTMLDivElement>(null);
   const scrollableRef = useRef<HTMLDivElement>(null);
 
   const [shouldAutoscroll, setShouldAutoscroll] = useState(true);
@@ -35,7 +34,7 @@ const AutoscrollList = () => {
   );
 
   // We don't need to extract the args from the callback because we don't need them in this case
-  useOnResize(contentRef, () => {
+  useOnResize(scrollableRef, () => {
     const scrollableEl = scrollableRef.current;
     if (!scrollableEl) return;
 
@@ -69,11 +68,9 @@ const AutoscrollList = () => {
               setShouldAutoscroll(true);
             }
           }}
-          className="mt-2 h-80 overflow-auto rounded-lg bg-white shadow"
+          className="mt-2 p-4 h-80 overflow-auto rounded-lg bg-white shadow"
         >
-          <div className="p-4" ref={contentRef}>
-            <p className="whitespace-pre-wrap text-gray-700">{text}</p>
-          </div>
+          <p className="whitespace-pre-wrap text-gray-700">{text}</p>
         </div>
 
         {!shouldAutoscroll && (
