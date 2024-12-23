@@ -6,6 +6,7 @@ export default function Home() {
       <Link href="/components/recursive-component">Recursive Component</Link>
       <Link href="/components/headless-dropdown">Headless Dropdown</Link>
       <Link href="/components/autoscroll-list">Autoscroll List</Link>
+      <Link href="/components/url-search-params">URL Search Params</Link>
     </div>
   );
 }
