@@ -7,6 +7,7 @@ export default function Home() {
       <Link href="/components/headless-dropdown">Headless Dropdown</Link>
       <Link href="/components/autoscroll-list">Autoscroll List</Link>
       <Link href="/components/url-search-params">URL Search Params</Link>
+      <Link href="/components/drag-to-select">Drag to select</Link>
     </div>
   );
 }
