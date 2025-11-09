@@ -73,7 +73,7 @@ body {
 }
 @media (prefers-color-scheme: dark) {
   body {
-    --background: #0a0a0a;
+    --background: #443131;
     --foreground: #ededed;
     color: var(--foreground);
     background: var(--background);

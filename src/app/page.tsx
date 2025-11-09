@@ -8,6 +8,10 @@ export default function Home() {
       <Link href="/components/autoscroll-list">Autoscroll List</Link>
       <Link href="/components/url-search-params">URL Search Params</Link>
       <Link href="/components/drag-to-select">Drag to select</Link>
+      <Link href="/components/treeview">Treeview</Link>
+      <Link href="/components/button-group-with-tabindex">
+        Button Group with TabIndex
+      </Link>
     </div>
   );
 }

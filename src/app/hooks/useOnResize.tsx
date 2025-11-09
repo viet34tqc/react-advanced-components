@@ -1,7 +1,7 @@
-import { MutableRefObject, useEffect, useRef } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 
 export function useOnResize(
-  ref: MutableRefObject<Element | null>,
+  ref: RefObject<Element | null>,
   callback: (args: { currentHeight: number; previousHeight: number }) => void
 ) {
   const observer = useRef<ResizeObserver | null>(null);
