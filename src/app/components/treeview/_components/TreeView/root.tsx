@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
-import { TreeViewContextProvider } from '../treeview-context';
+import { TreeViewContextProvider } from '../../treeview-context';
 
 type Props = {
   className: string;

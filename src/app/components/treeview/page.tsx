@@ -1,6 +1,6 @@
 'use client';
 
-import { TreeView } from './_components';
+import { TreeView } from './_components/TreeView';
 import { data } from './data';
 
 const TreeviewPage = () => {

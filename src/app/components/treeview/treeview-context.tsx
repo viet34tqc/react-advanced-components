@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 
-export type TreeViewContextState = Map<string, boolean>;
+export type TreeViewContextState = Record<string, boolean>;
 
 export const TreeViewActionsTypes = {
   OPEN: 'OPEN',
@@ -29,9 +29,9 @@ export const TreeViewReducer = (
 ) => {
   switch (action.type) {
     case TreeViewActionsTypes.OPEN:
-      return new Map(state).set(action.id, true);
+      return { ...state, [action.id]: true };
     case TreeViewActionsTypes.CLOSE:
-      return new Map(state).set(action.id, false);
+      return { ...state, [action.id]: false };
     default:
       return state;
   }
@@ -45,7 +45,7 @@ export type TreeViewContextType = {
 };
 
 export const TreeViewContext = createContext<TreeViewContextType | null>({
-  state: new Map<string, boolean>(),
+  state: {},
   dispatch: () => {},
   selectedId: null,
   select: () => {},
@@ -53,10 +53,7 @@ export const TreeViewContext = createContext<TreeViewContextType | null>({
 
 export const TreeViewContextProvider = ({ children }: PropsWithChildren) => {
   const [selectedId, select] = useState<string | null>(null);
-  const [state, dispatch] = useReducer(
-    TreeViewReducer,
-    new Map<string, boolean>()
-  );
+  const [state, dispatch] = useReducer(TreeViewReducer, {});
 
   return (
     <TreeViewContext.Provider value={{ state, dispatch, selectedId, select }}>
