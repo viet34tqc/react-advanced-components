@@ -1,13 +1,13 @@
 import isHotkey from 'is-hotkey';
 import {
-  RefObject,
-  createContext,
   ComponentPropsWithoutRef,
-  useContext,
-  useState,
-  useRef,
   ElementType,
   ReactNode,
+  RefObject,
+  createContext,
+  useContext,
+  useRef,
+  useState,
 } from 'react';
 
 export type RovingTabindexItem = {
@@ -51,22 +51,23 @@ export function useRovingTabindex(id: string) {
       },
       // Simulate 'onFocus' events when 'onClick' happens on Safari
       onMouseDown: (e: MouseEvent) => {
-        props?.onMouseDown?.(e);
         // Prevents event bubbling in nested tree items. This is an alternatives to stopPropagation
+        // Without this, you can not focus on the nested item using keyboard
         if (e.target !== e.currentTarget) return;
+        props?.onMouseDown?.(e);
         setFocusableId(id);
       },
       onKeyDown: (e: KeyboardEvent) => {
-        props?.onKeyDown?.(e);
         if (e.target !== e.currentTarget) return;
+        props?.onKeyDown?.(e);
         if (isHotkey('shift+tab', e)) {
           onShiftTab();
           return;
         }
       },
       onFocus: (e: FocusEvent) => {
-        props?.onFocus?.(e);
         if (e.target !== e.currentTarget) return;
+        props?.onFocus?.(e);
         setFocusableId(id);
       },
       ['data-item']: true,
@@ -103,6 +104,7 @@ export function RovingTabindexRoot<T extends ElementType>({
       ref.current.querySelectorAll<HTMLElement>('[data-item]')
     );
 
+    // Sorting to make sure we are getting the element in order because the order of component mounting might not be in order.
     return Array.from(elements.current)
       .sort(
         (a, b) => elementsFromDOM.indexOf(a[1]) - elementsFromDOM.indexOf(b[1])
@@ -206,6 +208,7 @@ export function getLastFocusableId(
 }
 
 // wrapArray([1,2,3],2) -> [3,1,2]
+// rotate the array to the left
 function wrapArray<T>(array: T[], startIndex: number) {
   return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
@@ -216,6 +219,8 @@ export function getNextFocusableIdByTypeahead(
   keyPressed: string
 ) {
   const currentIndex = items.findIndex(item => item.id === id);
+  // We move the currently focused element to the top of the array
+  // So we will start from focused element
   const wrappedItems = wrapArray(items, currentIndex);
   let index = 0,
     typeaheadMatchItem: RovingTabindexItem | undefined;

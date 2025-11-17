@@ -1,6 +1,17 @@
+import {
+  getFirstFocusableId,
+  getLastFocusableId,
+  getNextFocusableId,
+  getNextFocusableIdByTypeahead,
+  getParentFocusableId,
+  getPrevFocusableId,
+  RovingTabindexItem,
+  useRovingTabindex,
+} from '@/app/contexts/roving-tabindex';
 import clsx from 'clsx';
+import isHotkey from 'is-hotkey';
 import { ChevronRight } from 'lucide-react';
-import { useCallback } from 'react';
+import { KeyboardEvent, useCallback } from 'react';
 import {
   TreeViewActionsTypes,
   useTreeViewContext,
@@ -53,20 +64,61 @@ const useNodeInteraction = (id: string) => {
 
 const Node = ({ node: { name, children, id } }: NodeProps) => {
   const { isExpanded, handleToggle, isSelected } = useNodeInteraction(id);
+  const { getRovingProps, getOrderedItems, isFocusable } =
+    useRovingTabindex(id);
+  const hasChildren = !!children && children?.length > 0;
   return (
-    <li className="flex flex-col cursor-pointer select-none">
+    <li
+      {...getRovingProps<'li'>({
+        className:
+          'flex flex-col cursor-pointer select-none focus:outline-none group',
+        onKeyDown: function (e: KeyboardEvent) {
+          const items = getOrderedItems();
+          let nextItemToFocus: RovingTabindexItem | undefined;
+          if (isHotkey('up', e)) {
+            e.preventDefault();
+            nextItemToFocus = getPrevFocusableId(items, id);
+          } else if (isHotkey('down', e)) {
+            e.preventDefault();
+            nextItemToFocus = getNextFocusableId(items, id);
+          } else if (isHotkey('right', e)) {
+            e.preventDefault();
+            if (isExpanded && hasChildren) {
+              nextItemToFocus = getNextFocusableId(items, id);
+            } else {
+              handleToggle();
+            }
+          } else if (isHotkey('left', e)) {
+            e.preventDefault();
+            if (isExpanded && hasChildren) {
+              handleToggle();
+            } else {
+              nextItemToFocus = getParentFocusableId(items, id);
+            }
+          } else if (isHotkey('home', e)) {
+            e.preventDefault();
+            nextItemToFocus = getFirstFocusableId(items);
+          } else if (isHotkey('end', e)) {
+            e.preventDefault();
+            nextItemToFocus = getLastFocusableId(items);
+          }
+          // Using the start letter of the node name to focus the next node with the same first letter
+          else if (/^[a-z]$/i.test(e.key)) {
+            nextItemToFocus = getNextFocusableIdByTypeahead(items, id, e.key);
+          }
+          nextItemToFocus?.element.focus();
+        },
+      })}
+    >
       <div
         className={clsx(
-          'flex items-center gap-1 font-mono font-medium rounded-sm px-1',
+          'flex items-center space-x-2 font-mono font-medium rounded-sm px-1 border-[1.5px] border-transparent',
+          isFocusable && 'group-focus:border-slate-500',
           isSelected ? 'bg-slate-500' : 'bg-transparent'
         )}
         onClick={handleToggle}
       >
-        <NodeNameWithIcon
-          name={name}
-          hasIcon={!!(children && children.length > 0)}
-          id={id}
-        />
+        <NodeNameWithIcon name={name} hasIcon={hasChildren} id={id} />
       </div>
       {children && children.length > 0 && isExpanded && (
         <ul className="pl-4">

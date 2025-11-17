@@ -1,3 +1,4 @@
+import { RovingTabindexRoot } from '@/app/contexts/roving-tabindex';
 import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
 import { TreeViewContextProvider } from '../../treeview-context';
@@ -9,9 +10,12 @@ type Props = {
 const Root = ({ children, className }: PropsWithChildren<Props>) => {
   return (
     <TreeViewContextProvider>
-      <ul className={clsx('flex flex-col overflow-auto', className)}>
+      <RovingTabindexRoot
+        as="ul"
+        className={clsx('flex flex-col overflow-auto', className)}
+      >
         {children}
-      </ul>
+      </RovingTabindexRoot>
     </TreeViewContextProvider>
   );
 };
