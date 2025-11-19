@@ -12,6 +12,8 @@ const Root = ({ children, className }: PropsWithChildren<Props>) => {
     <TreeViewContextProvider>
       <RovingTabindexRoot
         as="ul"
+        aria-multiselectable="false"
+        role="tree"
         className={clsx('flex flex-col overflow-auto', className)}
       >
         {children}

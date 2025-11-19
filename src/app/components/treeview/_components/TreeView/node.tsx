@@ -22,14 +22,20 @@ type NodeProps = {
   node: TreeNode;
 };
 
-type NodeNameWithIconProps = NodeProps['node'] & { hasIcon: boolean };
+type NodeNameWithIconProps = NodeProps['node'] & {
+  hasIcon: boolean;
+  isExpanded: boolean;
+};
 
-function NodeNameWithIcon({ name, hasIcon, id }: NodeNameWithIconProps) {
-  const { state } = useTreeViewContext();
+function NodeNameWithIcon({
+  name,
+  hasIcon,
+  isExpanded,
+}: NodeNameWithIconProps) {
   const icon = (
     <ChevronRight
       className={clsx('h-4 w-4 transition-all shrink-0', {
-        'rotate-90': state[id],
+        'rotate-90': isExpanded,
       })}
     />
   );
@@ -45,31 +51,36 @@ function NodeNameWithIcon({ name, hasIcon, id }: NodeNameWithIconProps) {
 
 const useNodeInteraction = (id: string) => {
   const { state, dispatch, select, selectedId } = useTreeViewContext();
+  const isExpanded = state[id];
 
   const handleToggle = useCallback(() => {
     select(id);
-    const isExpanded = state[id];
     dispatch({
       type: isExpanded ? TreeViewActionsTypes.CLOSE : TreeViewActionsTypes.OPEN,
       id,
     });
-  }, [id, state, dispatch, select]);
+  }, [id, dispatch, select, isExpanded]);
 
   return {
-    isExpanded: state[id],
+    isExpanded,
+    selectedId,
     handleToggle,
     isSelected: selectedId === id,
   };
 };
 
 const Node = ({ node: { name, children, id } }: NodeProps) => {
-  const { isExpanded, handleToggle, isSelected } = useNodeInteraction(id);
+  const { isExpanded, handleToggle, isSelected, selectedId } =
+    useNodeInteraction(id);
   const { getRovingProps, getOrderedItems, isFocusable } =
     useRovingTabindex(id);
   const hasChildren = !!children && children?.length > 0;
   return (
     <li
       {...getRovingProps<'li'>({
+        ['aria-expanded']: hasChildren ? Boolean(isExpanded) : undefined,
+        ['aria-selected']: selectedId === id,
+        role: 'treeitem',
         className:
           'flex flex-col cursor-pointer select-none focus:outline-none group',
         onKeyDown: function (e: KeyboardEvent) {
@@ -118,10 +129,15 @@ const Node = ({ node: { name, children, id } }: NodeProps) => {
         )}
         onClick={handleToggle}
       >
-        <NodeNameWithIcon name={name} hasIcon={hasChildren} id={id} />
+        <NodeNameWithIcon
+          name={name}
+          hasIcon={hasChildren}
+          id={id}
+          isExpanded={isExpanded}
+        />
       </div>
       {children && children.length > 0 && isExpanded && (
-        <ul className="pl-4">
+        <ul className="pl-4" role="group">
           {children.map(node => (
             <Node node={node} key={node.id} />
           ))}
