@@ -12,6 +12,9 @@ export default function Home() {
       <Link href="/components/button-group-with-tabindex">
         Button Group with TabIndex
       </Link>
+      <Link href="/components/dropdown-menu-with-dialog">
+        Dropdown Menu with dialog
+      </Link>
     </div>
   );
 }
