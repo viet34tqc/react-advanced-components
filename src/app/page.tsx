@@ -15,6 +15,7 @@ export default function Home() {
       <Link href="/components/dropdown-menu-with-dialog">
         Dropdown Menu with dialog
       </Link>
+      <Link href="/components/slider">Slider</Link>
     </div>
   );
 }
