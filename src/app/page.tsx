@@ -16,6 +16,7 @@ export default function Home() {
         Dropdown Menu with dialog
       </Link>
       <Link href="/components/slider">Slider</Link>
+      <Link href="/components/svg-wheel">SVG Wheel</Link>
     </div>
   );
 }
