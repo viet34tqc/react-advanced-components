@@ -33,23 +33,35 @@ export const getSlicesWithAngle = () => {
 
 export const calculateSlicePath = (
   radiusOuter: number,
-  radiusInnter: number,
+  radiusInner: number,
   startAngle: number,
   endAngle: number
 ) => {
   const cx = WHEEL_CONFIGS.width / 2;
   const cy = WHEEL_CONFIGS.height / 2;
-  const outerStart = polarToCartesian(cx, cy, radiusOuter, startAngle);
-  const outerEnd = polarToCartesian(cx, cy, radiusOuter, endAngle);
-  const innerStart = polarToCartesian(cx, cy, radiusInnter, endAngle);
-  const innerEnd = polarToCartesian(cx, cy, radiusInnter, startAngle);
+
+  // Offset each slice's center outward along its midAngle to create gaps
+  const midAngle = (startAngle + endAngle) / 2;
+  const centerOffset = 1.5; // pixels to offset the slice center
+  const sliceCx = cx + centerOffset * Math.cos(deg2rad(midAngle - 90));
+  const sliceCy = cy + centerOffset * Math.sin(deg2rad(midAngle - 90));
+
+  const outerStart = polarToCartesian(
+    sliceCx,
+    sliceCy,
+    radiusOuter,
+    startAngle
+  );
+  const outerEnd = polarToCartesian(sliceCx, sliceCy, radiusOuter, endAngle);
+  const innerStart = polarToCartesian(sliceCx, sliceCy, radiusInner, endAngle);
+  const innerEnd = polarToCartesian(sliceCx, sliceCy, radiusInner, startAngle);
   const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
 
   return [
     `M ${outerStart.x} ${outerStart.y}`,
     `A ${radiusOuter} ${radiusOuter} 0 ${largeArcFlag} 1 ${outerEnd.x} ${outerEnd.y}`,
     `L ${innerStart.x} ${innerStart.y}`,
-    `A ${radiusInnter} ${radiusInnter} 0 ${largeArcFlag} 0 ${innerEnd.x} ${innerEnd.y}`,
+    `A ${radiusInner} ${radiusInner} 0 ${largeArcFlag} 0 ${innerEnd.x} ${innerEnd.y}`,
     'Z',
   ].join(' ');
 };

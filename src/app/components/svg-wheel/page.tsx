@@ -134,8 +134,8 @@ const SvgWheel = () => {
             <circle
               cx={cx}
               cy={cy}
-              r={WHEEL_CONFIGS.radius}
-              className="fill-slate-700 stroke-slate-900"
+              r={WHEEL_CONFIGS.radius + 20}
+              className="fill-slate-900 stroke-slate-900 stroke stroke-1"
             />
             {
               /* Display slices */
@@ -183,12 +183,6 @@ const SvgWheel = () => {
                 );
               })
             }
-            <circle
-              cx={WHEEL_CONFIGS.width / 2}
-              cy={WHEEL_CONFIGS.height / 2}
-              r={WHEEL_CONFIGS.innerRadius}
-              className="fill-slate-700 stroke-slate-900"
-            />
           </g>
         </svg>
       </div>
