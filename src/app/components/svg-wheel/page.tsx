@@ -125,6 +125,36 @@ const SvgWheel = () => {
           height={WHEEL_CONFIGS.height}
           viewBox={`0 0 ${WHEEL_CONFIGS.width} ${WHEEL_CONFIGS.height}`}
         >
+          <defs>
+            {slices.map(slice => {
+              // Calculate gradient direction based on slice position
+              // Gradient goes from center of the wheel outward along the slice's mid angle
+              const angle = deg2rad(slice.midAngle - 90);
+              // 50 means 50%
+              const x1 = 50 - Math.cos(angle) * 30; // Start closer to center
+              const y1 = 50 - Math.sin(angle) * 30;
+              const x2 = 50 + Math.cos(angle) * 50; // End at outer edge
+              const y2 = 50 + Math.sin(angle) * 50;
+
+              return (
+                <linearGradient
+                  key={`gradient-${slice.id}`}
+                  id={`gradient-${slice.id}`}
+                  x1={`${x1}%`}
+                  y1={`${y1}%`}
+                  x2={`${x2}%`}
+                  y2={`${y2}%`}
+                >
+                  <stop offset="0%" stopColor={slice.color} stopOpacity="1" />
+                  <stop
+                    offset="100%"
+                    stopColor={slice.color}
+                    stopOpacity="0.5"
+                  />
+                </linearGradient>
+              );
+            })}
+          </defs>
           <g
             transform={`rotate(${accumulatedRotation} ${cx} ${cy})`}
             style={{
@@ -161,6 +191,7 @@ const SvgWheel = () => {
                       key={slice.id}
                       d={d}
                       className={slice.classNames}
+                      fill={`url(#gradient-${slice.id})`}
                       style={{
                         transition: 'd 400ms cubic-bezier(.22,.9,.31,1)',
                         opacity: active === null || idx === active ? 1 : 0.3,
