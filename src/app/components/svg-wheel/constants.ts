@@ -1,7 +1,7 @@
 export const WHEEL_CONFIGS = {
   width: 600,
   height: 600,
-  radius: 300,
+  radius: 290, // The viewbox is equal to the width and height, so we need the radius of the slice to be less than the viewBox. Otherwise, the slice will be clipped
   innerRadius: 50,
 };
 
