@@ -5,6 +5,13 @@ export const WHEEL_CONFIGS = {
   innerRadius: 50,
 };
 
+/**
+ * We want to start drawing the slice not from the center, we shift this point a little bit, in order to create a gap between the slices. If all the slices starts from the same location, their stroke will still gather at the same point when we add gap. Because each slice has a stroke width as 1, we use '2' here to create 1px offset
+ */
+export const SLICE_OFFSET = 2;
+// The outer circle will offset from the slice 20px
+export const OUTER_CIRCLE_OFFSET = 20;
+
 export const SLICES = [
   {
     id: 'wan',
@@ -32,7 +39,7 @@ export const SLICES = [
     label: 'SERVICES',
     values: [0],
     details: 'No services active.',
-    classNames: 'fill-slate-900 stroke-slate-800',
+    classNames: 'fill-slate-500 stroke-slate-800',
   },
   {
     id: 'cpe',

@@ -1,4 +1,9 @@
-import { SLICES, WHEEL_CONFIGS } from './constants';
+import {
+  OUTER_CIRCLE_OFFSET,
+  SLICE_OFFSET,
+  SLICES,
+  WHEEL_CONFIGS,
+} from './constants';
 
 export const deg2rad = (degree: number) => (degree * Math.PI) / 180;
 
@@ -35,16 +40,26 @@ export const calculateSlicePath = (
   radiusOuter: number,
   radiusInner: number,
   startAngle: number,
-  endAngle: number
+  endAngle: number,
+  isActive = false
 ) => {
   const cx = WHEEL_CONFIGS.width / 2;
   const cy = WHEEL_CONFIGS.height / 2;
-
-  // Offset each slice's center outward along its midAngle to create gaps
   const midAngle = (startAngle + endAngle) / 2;
-  const centerOffset = 1.5; // pixels to offset the slice center
-  const sliceCx = cx + centerOffset * Math.cos(deg2rad(midAngle - 90));
-  const sliceCy = cy + centerOffset * Math.sin(deg2rad(midAngle - 90));
+
+  // Offset each slice's center outward along its midAngle to create gaps between slices
+  // We calculate based on the center point
+  // When active, increase the offset to push the slice outward to touch outer circle
+  const centerOffset = isActive
+    ? OUTER_CIRCLE_OFFSET + SLICE_OFFSET
+    : SLICE_OFFSET; // Push outward by 20px more when active
+
+  const { x: sliceCx, y: sliceCy } = polarToCartesian(
+    cx,
+    cy,
+    centerOffset,
+    midAngle
+  );
 
   const outerStart = polarToCartesian(
     sliceCx,

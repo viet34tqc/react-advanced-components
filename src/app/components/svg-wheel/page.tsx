@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ArrowDown, ArrowUp, Router, Star, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { WHEEL_CONFIGS } from './constants';
+import { OUTER_CIRCLE_OFFSET, WHEEL_CONFIGS } from './constants';
 import { calculateSlicePath, deg2rad, getSlicesWithAngle } from './utils';
 
 const slices = getSlicesWithAngle();
@@ -134,7 +134,7 @@ const SvgWheel = () => {
             <circle
               cx={cx}
               cy={cy}
-              r={WHEEL_CONFIGS.radius + 20}
+              r={WHEEL_CONFIGS.radius + OUTER_CIRCLE_OFFSET}
               className="fill-slate-900 stroke-slate-900 stroke stroke-1"
             />
             {
@@ -144,7 +144,8 @@ const SvgWheel = () => {
                   WHEEL_CONFIGS.radius,
                   WHEEL_CONFIGS.innerRadius,
                   slice.startAngle,
-                  slice.endAngle
+                  slice.endAngle,
+                  idx === active
                 );
 
                 // The label is in the middle of outerRadius and innerRadius
@@ -160,6 +161,10 @@ const SvgWheel = () => {
                       key={slice.id}
                       d={d}
                       className={slice.classNames}
+                      style={{
+                        transition: 'd 400ms cubic-bezier(.22,.9,.31,1)',
+                        opacity: active === null || idx === active ? 1 : 0.3,
+                      }}
                       onClick={() => setActive(idx === active ? null : idx)}
                     />
                     {/* foreignObject allows to write html inside svg */}
