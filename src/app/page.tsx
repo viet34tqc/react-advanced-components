@@ -17,6 +17,9 @@ export default function Home() {
       </Link>
       <Link href="/components/slider">Slider</Link>
       <Link href="/components/svg-wheel">SVG Wheel</Link>
+      <Link href="/components/multiple-widgets">
+        Multiple Widgets on Dashboard
+      </Link>
     </div>
   );
 }
